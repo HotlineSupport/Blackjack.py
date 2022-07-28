@@ -7,14 +7,20 @@ values = ("2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A")
 player = []
 dealer = []
 
-for cardtype in types:
-    for value in values:
-        deck.append(cardtype + "-" + value)
 
-random.shuffle(deck)
+def shuffleDeck():
+    player.clear()
+    dealer.clear()
+    for cardtype in types:
+        for value in values:
+            deck.append(cardtype + "-" + value)
+
+    random.shuffle(deck)
+
 
 def hit(turn):
     turn.append(deck.pop(0))
+
 
 def aceCheck(drawnCards):
     i = 0
@@ -23,11 +29,12 @@ def aceCheck(drawnCards):
             i += 1
     return i
 
+
 def getValue(drawnCards):
     x = []
     y = []
     z = 0
-    for i in range (0, len(drawnCards)):
+    for i in range(0, len(drawnCards)):
         x.append((drawnCards[i][-1]))
     for item in x:
         if item == "J" or item == "Q" or item == "K" or item == "0":
@@ -39,6 +46,7 @@ def getValue(drawnCards):
         z += int(value)
     return z
 
+
 def finalSum(drawnCards):
     sum = getValue(drawnCards)
     numberOfAces = aceCheck(drawnCards)
@@ -47,6 +55,7 @@ def finalSum(drawnCards):
             sum = sum - 10
             numberOfAces = numberOfAces - 1
     return sum
+
 
 def playerLogic():
     print("your cards", player)
@@ -63,11 +72,13 @@ def playerLogic():
     elif playerinput == "stand":
         print("dealers turn")
 
+
 def dealerLogic():
     while finalSum(dealer) < 17:
         hit(dealer)
         print("dealers cards", dealer)
         time.sleep(1)
+
 
 def gameLogic():
     if finalSum(player) > 21:
@@ -76,10 +87,14 @@ def gameLogic():
         print("you won")
     elif finalSum(player) > finalSum(dealer):
         print("you won")
+    elif finalSum(player) == finalSum(dealer):
+        print("draw")
     else:
         print("dealer won")
 
+
 def gameSession():
+    shuffleDeck()
     hit(dealer)
     print("dealers cards", dealer)
     print(finalSum(dealer))
@@ -89,6 +104,10 @@ def gameSession():
     dealerLogic()
     print(finalSum(dealer))
     gameLogic()
+    if input("Another round?") == "yes":
+        gameSession()
+    else:
+        return
 
 
 gameSession()
